@@ -1,10 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {    
+  experimental: {
     serverComponentsExternalPackages: ["mongoose"],
   },
   images: {
-    domains: ["m.media-amazon.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "m.media-amazon.com",
+        pathname: "**",
+      },
+    ],
   },
 };
 

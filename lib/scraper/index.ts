@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { extractCurrency, extractDescription, extractPrice } from "../utils";
@@ -5,11 +7,12 @@ import { extractCurrency, extractDescription, extractPrice } from "../utils";
 export async function scrapeAmazonProduct(url: string) {
   if (!url) return;
 
-  // Brightdata proxy configuration
+  // BrightData proxy configuration
   const username = String(process.env.BRIGHT_DATA_USERNAME);
   const password = String(process.env.BRIGHT_DATA_PASSWORD);
   const port = 22225;
   const session_id = (1000000 * Math.random()) | 0;
+
   const options = {
     auth: {
       username: `${username}-session-${session_id}`,
@@ -29,7 +32,7 @@ export async function scrapeAmazonProduct(url: string) {
     const title = $("#productTitle").text().trim();
     const currentPrice = extractPrice(
       $(".priceToPay span.a-price-whole"),
-      $("a.size.base.a-color-price"),
+      $(".a.size.base.a-color-price"),
       $(".a-button-selected .a-color-base")
     );
 
@@ -69,15 +72,15 @@ export async function scrapeAmazonProduct(url: string) {
       category: "category",
       reviewsCount: 100,
       stars: 4.5,
-      isOutofStock: outOfStock,
+      isOutOfStock: outOfStock,
       description,
       lowestPrice: Number(currentPrice) || Number(originalPrice),
       highestPrice: Number(originalPrice) || Number(currentPrice),
-      average: Number(originalPrice) || Number(currentPrice),
+      averagePrice: Number(currentPrice) || Number(originalPrice),
     };
 
     return data;
   } catch (error: any) {
-    throw new Error(`Failed to scape product:${error.message}`);
+    console.log(error);
   }
 }

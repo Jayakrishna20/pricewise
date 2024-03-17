@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema(
     description: { type: String },
     category: { type: String },
     reviewsCount: { type: Number },
-    isOutOfStock: { type: Boolean, required: true },
+    isOutOfStock: { type: Boolean, default: false, required:true },
     users: [{ email: { type: String, required: true } }],
     default: [],
   },
